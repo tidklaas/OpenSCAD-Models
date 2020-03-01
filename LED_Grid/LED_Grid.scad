@@ -13,11 +13,11 @@ num_x = 8;
 num_y = 8;
 
 /*
- * Spacing of LEDs on strip in millimeters. Either calculate from LEDs/m or
- * set direct value.
+ * Spacing of LEDs on strip in millimeters. Either calculate from LEDs/m
+ * (rounded to two decimal places) or set direct value.
  */
-//cell_size = 1000 / 60;
-cell_size = 16.67;
+leds_pm = 100;
+cell_size = round(100000 / leds_pm) / 100;
 
 /* Wall thickness in millimeters. */
 wall_t = 1;
@@ -28,8 +28,8 @@ wall_t = 1;
  * Although most 5050 RGB LEDs claim to have a viewing angle of 120 degrees,
  * brightness tends to drop off significantly beyond 30 degrees off axis.
  */
-//wall_h = (cell_size / 2) / tan(30);
 wall_h = 15;
+//wall_h = (cell_size / 2) / tan(30);
 
 /*
  * Hight of the cutout for the flexible PCB at the bottom of each grid wall,
@@ -61,83 +61,109 @@ tab_w = 5;
 tab_h = 2;
 
 /*
- * Create every possible module and arrange them with at their relative
- * position, but a little spread out.
+ * Only a single module will be rendered if borders is defined.
+ * Otherwise all possible combinations of borders will be created.
+ * Order is top, right, bottom, left.
  */
-spread = 5;
+borders = [1, 1, 1, 1];
 
-// Borders on top and left side.
-translate([-1.5 * num_x * cell_size - spread,
-            num_y * cell_size + 1.5 * spread,
-           0])
-    color("blue") ledgrid([1, 0, 0, 1]);
+if(!is_undef(borders)){
+    /* Create a single module with the given borders. */
+    translate([-(num_x * cell_size + wall_t) / 2,
+               -(num_y * cell_size + wall_t) / 2,
+               0])
+        color("blue") ledgrid(borders);
+} else {
+   /*
+    * Create every possible module and arrange them with at their relative
+    * position, but a little spread out.
+    */
+    spread = 5;
 
-// Border on top.
-translate([-0.5 * num_x * cell_size,
-            num_y * cell_size + 1.5 * spread,
-            0])
-    color("blue") ledgrid([1, 0, 0, 0]);
+    /* Borders on top and left side. */
+    translate([-1.5 * num_x * cell_size - spread,
+                num_y * cell_size + 1.5 * spread,
+               0])
+        color("blue") ledgrid([1, 0, 0, 1]);
 
-// Borders on top and right side.
-translate([0.5 * num_x * cell_size + spread,
-           num_y * cell_size + 1.5 * spread,
-           0])
-    color("blue") ledgrid([1, 1, 0, 0]);
+    /* Border on top. */
+    translate([-0.5 * num_x * cell_size,
+                num_y * cell_size + 1.5 * spread,
+                0])
+        color("blue") ledgrid([1, 0, 0, 0]);
 
-// Border on right side.
-translate([0.5 * num_x * cell_size + spread,
-          spread / 2,
-          0])
-    color("blue") ledgrid([0, 1, 0, 0]);
+    /* Borders on top and right side. */
+    translate([0.5 * num_x * cell_size + spread,
+               num_y * cell_size + 1.5 * spread,
+               0])
+        color("blue") ledgrid([1, 1, 0, 0]);
 
-// Border on right side and bottom.
-translate([0.5 * num_x * cell_size + spread,
-           -num_y * cell_size - spread / 2,
-           0])
-    color("blue") ledgrid([0, 1, 1, 0]);
+    /* Border on right side. */
+    translate([0.5 * num_x * cell_size + spread,
+              spread / 2,
+              0])
+        color("blue") ledgrid([0, 1, 0, 0]);
 
-// Border on bottom.
-translate([-0.5 * num_x * cell_size,
-           -num_y * cell_size - spread / 2,
-           0])
-    color("blue") ledgrid([0, 0, 1, 0]);
+    /* Border on right side and bottom. */
+    translate([0.5 * num_x * cell_size + spread,
+               -num_y * cell_size - spread / 2,
+               0])
+        color("blue") ledgrid([0, 1, 1, 0]);
 
-// Border on bottom and left side.
-translate([-1.5 * num_x * cell_size - spread,
-           -num_y * cell_size - spread / 2,
-           0])
-    color("blue") ledgrid([0, 0, 1, 1]);
+    /* Border on bottom. */
+    translate([-0.5 * num_x * cell_size,
+               -num_y * cell_size - spread / 2,
+               0])
+        color("blue") ledgrid([0, 0, 1, 0]);
 
-// Border on left side.
-translate([-1.5 * num_x * cell_size - spread,
-           spread / 2,
-           0])
-    color("blue") ledgrid([0, 0, 0, 1]);
+    /* Border on bottom and left side. */
+    translate([-1.5 * num_x * cell_size - spread,
+               -num_y * cell_size - spread / 2,
+               0])
+        color("blue") ledgrid([0, 0, 1, 1]);
 
-// No borders.
-translate([-0.5 * num_x * cell_size,
-           spread / 2,
-           0])
-    color("blue") ledgrid([0, 0, 0, 0]);
+    /* Border on left side. */
+    translate([-1.5 * num_x * cell_size - spread,
+               spread / 2,
+               0])
+        color("blue") ledgrid([0, 0, 0, 1]);
 
-// Border on top, bottom and left side.
-translate([-1.5 * num_x * cell_size - spread,
-           -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
-           0])
-    color("blue") ledgrid([1, 0, 1, 1]);
+    /* No borders. */
+    translate([-0.5 * num_x * cell_size,
+               spread / 2,
+               0])
+        color("blue") ledgrid([0, 0, 0, 0]);
 
-// Border on top and bottom.
-translate([-0.5 * num_x * cell_size,
-           -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
-           0])
-    color("blue") ledgrid([1, 0, 1, 0]);
+    /* Border all around. */
+    translate([-2.5 * num_x * cell_size - 2 * spread - 2 * tab_w,
+               -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
+               0])
+        color("blue") ledgrid([1, 1, 1, 1]);
 
-// Border on top, bottom and right side.
-translate([0.5 * num_x * cell_size + spread,
-           -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
-           0])
-    color("blue") ledgrid([1, 1, 1, 0]);
+    /* Border on top, bottom and left side. */
+    translate([-1.5 * num_x * cell_size - spread,
+               -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
+               0])
+        color("blue") ledgrid([1, 0, 1, 1]);
 
+    /* Border on top and bottom. */
+    translate([-0.5 * num_x * cell_size,
+               -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
+               0])
+        color("blue") ledgrid([1, 0, 1, 0]);
+
+    /* Border on left and right side. */
+    translate([0.5 * num_x * cell_size + spread + tab_w,
+               -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
+               0])
+        color("blue") ledgrid([ 0, 1, 0, 1]);
+
+    /* Border on top, bottom and right side. */
+    translate([1.5 * num_x * cell_size + 2 * spread + 2 * tab_w,
+               -2 * num_y * cell_size - 1.5 * spread - 2 * tab_w,
+               0])
+        color("blue") ledgrid([1, 1, 1, 0]);
+}
 
 /*****************************************************************************\
  * Module code starts here.                                                  *
