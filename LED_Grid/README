@@ -1,0 +1,8 @@
+A configurable and modular LED matrix grid.
+
+All parameters, like x/y dimensions, cell spacing, wall hight, edge wall
+configuration, etc. can be modified. Multiple modules may be combined to
+form a bigger grid.
+
+This project was primarily created as a way to learn the basics of OpenSCAD,
+so do not expect the most elegant and efficient code.
