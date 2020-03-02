@@ -6,30 +6,51 @@
  * https://creativecommons.org/licenses/by-sa/4.0/
  */
 
-/* Number of LEDs in x direction. */
-num_x = 8;
+/* [Global] */
 
-/* Number of LEDs in y direction. */
-num_y = 8;
+// Number of LEDs in X direction.
+num_x = 8; // [2:1:32]
+
+// Number of LEDs in Y direction.
+num_y = 8; // [2:1:32]
+
+// Number of LEDs per meter.
+leds_pm = 100; // [30, 60, 74, 96, 100, 144]
 
 /*
  * Spacing of LEDs on strip in millimeters. Either calculate from LEDs/m
  * (rounded to two decimal places) or set direct value.
  */
-leds_pm = 100;
 cell_size = round(100000 / leds_pm) / 100;
 
-/* Wall thickness in millimeters. */
-wall_t = 1;
+// Wall height in millimeters.
+wall_h = 10; // [7.5, 10, 15, 30]
 
 /*
- * Wall hight in millimeters.
- * Minimal wall hight can be calculated from LED spacing and beam angle.
+ * Minimal wall height can be calculated from LED spacing and beam angle.
  * Although most 5050 RGB LEDs claim to have a viewing angle of 120 degrees,
  * brightness tends to drop off significantly beyond 30 degrees off axis.
  */
-wall_h = 15;
 //wall_h = (cell_size / 2) / tan(30);
+
+// Clearance between interlocking grid modules in millimeters.
+cut_clr = 0.25; // [0:0.125:0.5]
+
+// Add border at the top side of the module.
+b_top = 1; // [0, 1]
+
+// Add border at the right side of the module.
+b_right = 1; // [0, 1]
+
+// Add border at the bottom side of the module.
+b_bottom = 1; // [0, 1]
+
+// Add border at the left side of the module.
+b_left = 1; // [0, 1]
+
+/* [Hidden] */
+/* Wall thickness in millimeters. */
+wall_t = 1;
 
 /*
  * Hight of the cutout for the flexible PCB at the bottom of each grid wall,
@@ -44,13 +65,7 @@ gate_h = 1;
 gate_w = cell_size - 2 * wall_t;
 
 /*
- * Clearance between interlocking grid modules in millimeters.
- * Depends on printer settings and capabilities.
- */
-cut_clr = 0.25;
-
-/*
- * Width and hight of screw tabs. Tabs will be placed along a module's
+ * Width and height of screw tabs. Tabs will be placed along a module's
  * border, across from the second and second-to-last perpendicular wall.
  * Setting either tab_w or tab_h to zero will prevent tabs from being
  * created.
@@ -61,11 +76,11 @@ tab_w = 5;
 tab_h = 2;
 
 /*
- * Only a single module will be rendered if borders is defined.
+ * Only a single module will be rendered if variable borders is defined.
  * Otherwise all possible combinations of borders will be created.
  * Order is top, right, bottom, left.
  */
-borders = [1, 1, 1, 1];
+borders = [b_top, b_right, b_bottom, b_left];
 
 if(!is_undef(borders)){
     /* Create a single module with the given borders. */
